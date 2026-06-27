@@ -12,7 +12,7 @@ AI-powered support ticket system. Agents manually reading/classifying hundreds o
 | Styling | Tailwind CSS v4 + shadcn/ui v4 |
 | Database | PostgreSQL (local dev) |
 | ORM | **Prisma 6** (pinned — see note below) |
-| Auth | NextAuth.js (Phase 2) |
+| Auth | Better Auth (Phase 2) |
 | AI | Anthropic Claude API (Phase 6) |
 | Email | Hostinger SMTP/IMAP (Phase 5) |
 | Deploy | Vercel |

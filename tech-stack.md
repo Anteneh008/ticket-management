@@ -9,7 +9,7 @@
 - **Prisma** — type-safe ORM
 
 ## Authentication
-- **NextAuth.js** — session management and role-based access (admin vs. agent)
+- **Better Auth** — session management and role-based access (admin vs. agent)
 
 ## AI
 - **Anthropic Claude API** — ticket classification, summaries, and suggested replies

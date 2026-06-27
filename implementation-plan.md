@@ -10,7 +10,7 @@
 ## Phase 2: Authentication
 - Design the User schema (id, name, email, password, role)
 - Seed the initial admin account
-- Set up NextAuth.js with credentials provider
+- Set up Better Auth with credentials provider
 - Build login page
 - Protect routes based on role (admin vs. agent)
 
