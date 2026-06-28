@@ -2,34 +2,28 @@ import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
 import { auth } from "../src/lib/auth";
 
-async function main() {
-  const existing = await prisma.user.findUnique({
-    where: { email: "admin@ticketapp.com" },
-  });
-
+async function seedUser(
+  name: string,
+  email: string,
+  password: string,
+  role: string
+) {
+  const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    console.log("Admin already exists — skipping seed.");
+    console.log(`${name} already exists — skipping.`);
     return;
   }
 
-  const response = await auth.api.signUpEmail({
-    body: {
-      name: "Admin",
-      email: "admin@ticketapp.com",
-      password: "Admin@123456",
-    },
-  });
+  const response = await auth.api.signUpEmail({ body: { name, email, password } });
+  if (!response) throw new Error(`Sign-up failed for ${email}.`);
 
-  if (!response) {
-    throw new Error("Sign-up failed — no response returned.");
-  }
+  await prisma.user.update({ where: { email }, data: { role } });
+  console.log(`Seeded ${role}: ${email} / ${password}`);
+}
 
-  await prisma.user.update({
-    where: { email: "admin@ticketapp.com" },
-    data: { role: "admin" },
-  });
-
-  console.log("Admin seeded: admin@ticketapp.com / Admin@123456");
+async function main() {
+  await seedUser("Admin", "admin@ticketapp.com", "Admin@123456", "admin");
+  await seedUser("Agent", "agent@ticketapp.com", "Agent@123456", "agent");
 }
 
 main()
