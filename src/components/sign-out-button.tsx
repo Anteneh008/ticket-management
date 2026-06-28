@@ -11,11 +11,10 @@ export function SignOutButton() {
     <Button
       variant="ghost"
       size="sm"
-      onClick={() =>
-        authClient.signOut({
-          fetchOptions: { onSuccess: () => router.push("/login") },
-        })
-      }
+      onClick={async () => {
+        await authClient.signOut();
+        router.push("/login");
+      }}
     >
       Sign out
     </Button>
