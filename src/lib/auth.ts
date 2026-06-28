@@ -20,9 +20,9 @@ export const auth = betterAuth({
     },
   },
   rateLimit: {
-    enabled: true,
     window: 60,
     max: 10,
+    // enabled defaults to false in development, true in production
   },
   user: {
     additionalFields: {
