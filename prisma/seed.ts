@@ -18,12 +18,21 @@ async function seedUser(
   if (!response) throw new Error(`Sign-up failed for ${email}.`);
 
   await prisma.user.update({ where: { email }, data: { role } });
-  console.log(`Seeded ${role}: ${email} / ${password}`);
+  console.log(`Seeded ${role}: ${email}`);
 }
 
 async function main() {
-  await seedUser("Admin", "admin@ticketapp.com", "Admin@123456", "admin");
-  await seedUser("Agent", "agent@ticketapp.com", "Agent@123456", "agent");
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  const agentPassword = process.env.SEED_AGENT_PASSWORD;
+
+  if (!adminPassword || !agentPassword) {
+    throw new Error(
+      "SEED_ADMIN_PASSWORD and SEED_AGENT_PASSWORD must be set in .env"
+    );
+  }
+
+  await seedUser("Admin", "admin@ticketapp.com", adminPassword, "admin");
+  await seedUser("Agent", "agent@ticketapp.com", agentPassword, "agent");
 }
 
 main()

@@ -43,7 +43,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError("root", { message: error.message ?? "Invalid email or password." });
+      setError("root", { message: "Invalid email or password." });
       return;
     }
 

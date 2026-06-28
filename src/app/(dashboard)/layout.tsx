@@ -1,6 +1,4 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { requireSession } from "@/lib/auth-utils";
 import { SignOutButton } from "@/components/sign-out-button";
 
 export default async function DashboardLayout({
@@ -8,11 +6,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    redirect("/login");
-  }
+  const session = await requireSession();
 
   return (
     <div className="flex min-h-full flex-col">
