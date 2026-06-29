@@ -1,6 +1,7 @@
 import "dotenv/config";
+import { randomUUID } from "crypto";
+import { hashPassword } from "@better-auth/utils/password";
 import { prisma } from "../src/lib/prisma";
-import { auth } from "../src/lib/auth";
 
 async function seedUser(
   name: string,
@@ -14,10 +15,24 @@ async function seedUser(
     return;
   }
 
-  const response = await auth.api.signUpEmail({ body: { name, email, password } });
-  if (!response) throw new Error(`Sign-up failed for ${email}.`);
+  const userId = randomUUID().replace(/-/g, "");
+  const hash = await hashPassword(password);
 
-  await prisma.user.update({ where: { email }, data: { role } });
+  await prisma.$transaction([
+    prisma.user.create({
+      data: { id: userId, name, email, emailVerified: false, role },
+    }),
+    prisma.account.create({
+      data: {
+        id: randomUUID().replace(/-/g, ""),
+        accountId: userId,
+        providerId: "credential",
+        userId,
+        password: hash,
+      },
+    }),
+  ]);
+
   console.log(`Seeded ${role}: ${email}`);
 }
 

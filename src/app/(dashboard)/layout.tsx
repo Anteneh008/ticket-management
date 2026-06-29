@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireSession } from "@/lib/auth-utils";
 import { SignOutButton } from "@/components/sign-out-button";
 
@@ -12,12 +13,21 @@ export default async function DashboardLayout({
     <div className="flex min-h-full flex-col">
       <header className="border-b border-zinc-200 bg-white px-6 py-3">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
-          <span className="font-semibold text-zinc-900">Ticket Management</span>
+          <div className="flex items-center gap-6">
+            <span className="font-semibold text-zinc-900">Ticket Management</span>
+            <nav className="flex items-center gap-4 text-sm">
+              <Link href="/dashboard" className="text-zinc-600 hover:text-zinc-900 transition-colors">
+                Dashboard
+              </Link>
+              {session.user.role === "admin" && (
+                <Link href="/users" className="text-zinc-600 hover:text-zinc-900 transition-colors">
+                  Users
+                </Link>
+              )}
+            </nav>
+          </div>
           <div className="flex items-center gap-3 text-sm text-zinc-600">
             <span>{session.user.name}</span>
-            <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium capitalize">
-              {session.user.role}
-            </span>
             <SignOutButton />
           </div>
         </div>
