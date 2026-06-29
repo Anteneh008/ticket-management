@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth-utils";
 import { SignOutButton } from "@/components/sign-out-button";
+import { Providers } from "@/components/providers";
 
 export default async function DashboardLayout({
   children,
@@ -33,7 +34,9 @@ export default async function DashboardLayout({
         </div>
       </header>
       <main className="flex-1 bg-zinc-50 p-6">
-        <div className="mx-auto max-w-5xl">{children}</div>
+        <div className="mx-auto max-w-5xl">
+          <Providers>{children}</Providers>
+        </div>
       </main>
     </div>
   );

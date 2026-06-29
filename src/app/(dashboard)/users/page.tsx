@@ -1,16 +1,27 @@
+"use client";
+
 import Link from "next/link";
-import { requireRole } from "@/lib/auth-utils";
-import { prisma } from "@/lib/prisma";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import { buttonVariants } from "@/components/ui/button";
 import { DeleteAgentButton } from "@/components/delete-agent-button";
 
-export default async function UsersPage() {
-  await requireRole("admin");
+type Agent = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+};
 
-  const agents = await prisma.user.findMany({
-    where: { role: "agent" },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, name: true, email: true, createdAt: true },
+async function fetchAgents(): Promise<Agent[]> {
+  const { data } = await axios.get<Agent[]>("/api/users");
+  return data;
+}
+
+export default function UsersPage() {
+  const { data: agents, isLoading, isError } = useQuery({
+    queryKey: ["agents"],
+    queryFn: fetchAgents,
   });
 
   return (
@@ -22,9 +33,19 @@ export default async function UsersPage() {
         </Link>
       </div>
 
-      {agents.length === 0 ? (
+      {isLoading && (
+        <p className="text-sm text-zinc-500">Loading…</p>
+      )}
+
+      {isError && (
+        <p className="text-sm text-destructive">Failed to load agents.</p>
+      )}
+
+      {agents && agents.length === 0 && (
         <p className="text-sm text-zinc-500">No agents yet. Create one to get started.</p>
-      ) : (
+      )}
+
+      {agents && agents.length > 0 && (
         <div className="overflow-hidden rounded-xl ring-1 ring-zinc-200 bg-white">
           <table className="w-full text-sm">
             <thead>
@@ -41,7 +62,7 @@ export default async function UsersPage() {
                   <td className="px-4 py-3 font-medium text-zinc-900">{agent.name}</td>
                   <td className="px-4 py-3 text-zinc-600">{agent.email}</td>
                   <td className="px-4 py-3 text-zinc-500">
-                    {agent.createdAt.toLocaleDateString("en-US", {
+                    {new Date(agent.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
