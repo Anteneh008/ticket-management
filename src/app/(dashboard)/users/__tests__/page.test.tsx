@@ -109,14 +109,21 @@ describe("UsersPage", () => {
     });
   });
 
-  it("has a 'New agent' link pointing to /users/new", async () => {
+  it("has a 'New agent' button that opens the dialog", async () => {
     mockedGet.mockResolvedValue({ data: [] });
+    const user = userEvent.setup();
 
     renderPage();
 
-    const link = screen.getByRole("link", { name: "New agent" });
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/users/new");
+    const trigger = screen.getByRole("button", { name: "New agent" });
+    expect(trigger).toBeInTheDocument();
+
+    await user.click(trigger);
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByLabelText("Name")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
+    expect(screen.getByLabelText("Password")).toBeInTheDocument();
   });
 
   describe("DeleteAgentButton", () => {

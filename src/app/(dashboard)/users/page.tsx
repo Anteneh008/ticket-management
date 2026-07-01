@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { buttonVariants } from "@/components/ui/button";
 import { DeleteAgentButton } from "@/components/delete-agent-button";
+import { NewAgentDialog } from "@/components/new-agent-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -37,9 +36,7 @@ export default function UsersPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-zinc-900">Users</h1>
-        <Link href="/users/new" className={buttonVariants()}>
-          New agent
-        </Link>
+        <NewAgentDialog />
       </div>
 
       {isLoading && (
